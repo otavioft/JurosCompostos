@@ -15,6 +15,7 @@ interface InputSectionProps {
   setPeriod: (v: number) => void;
   periodType: PeriodType;
   setPeriodType: (v: PeriodType) => void;
+  onClear: () => void;
 }
 
 const InputSection: React.FC<InputSectionProps> = ({
@@ -23,82 +24,93 @@ const InputSection: React.FC<InputSectionProps> = ({
   interestRate, setInterestRate,
   rateType, setRateType,
   period, setPeriod,
-  periodType, setPeriodType
+  periodType, setPeriodType,
+  onClear
 }) => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <h2 className="text-xl font-bold text-slate-800 mb-6 border-b pb-4">Parâmetros</h2>
-      
-      <div className="space-y-5">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
         {/* Valor Inicial */}
         <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1.5">Aporte Inicial (R$)</label>
-          <div className="relative">
-            <span className="absolute left-3 top-2.5 text-slate-400 text-sm">R$</span>
+          <label className="block text-sm text-slate-500 font-semibold mb-2 uppercase tracking-tight text-[11px]">Valor inicial</label>
+          <div className="flex h-11">
+            <span className="flex items-center px-4 input-addon rounded-l-md font-medium text-sm">R$</span>
             <input 
               type="number" 
               value={initialValue}
               onChange={(e) => setInitialValue(Number(e.target.value))}
-              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="flex-1 px-4 custom-input outline-none focus:border-primary rounded-r-md transition-colors"
             />
           </div>
         </div>
 
         {/* Valor Mensal */}
         <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1.5">Aporte Mensal (R$)</label>
-          <div className="relative">
-            <span className="absolute left-3 top-2.5 text-slate-400 text-sm">R$</span>
+          <label className="block text-sm text-slate-500 font-semibold mb-2 uppercase tracking-tight text-[11px]">Valor mensal</label>
+          <div className="flex h-11">
+            <span className="flex items-center px-4 input-addon rounded-l-md font-medium text-sm">R$</span>
             <input 
               type="number" 
               value={monthlyValue}
               onChange={(e) => setMonthlyValue(Number(e.target.value))}
-              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="flex-1 px-4 custom-input outline-none focus:border-primary rounded-r-md transition-colors"
             />
           </div>
         </div>
 
         {/* Taxa de Juros */}
         <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1.5">Taxa de Juros (%)</label>
-          <div className="flex gap-2">
+          <label className="block text-sm text-slate-500 font-semibold mb-2 uppercase tracking-tight text-[11px]">Taxa de juros</label>
+          <div className="flex h-11">
+            <span className="flex items-center px-4 input-addon rounded-l-md font-medium text-sm">%</span>
             <input 
               type="number" 
-              step="0.1"
               value={interestRate}
               onChange={(e) => setInterestRate(Number(e.target.value))}
-              className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="flex-1 px-4 custom-input outline-none focus:border-primary transition-colors"
             />
             <select 
               value={rateType}
               onChange={(e) => setRateType(e.target.value as RateType)}
-              className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5"
+              className="px-4 custom-select rounded-r-md text-sm outline-none cursor-pointer hover:bg-slate-50 transition-colors"
             >
-              <option value={RateType.ANNUAL}>Anual</option>
-              <option value={RateType.MONTHLY}>Mensal</option>
+              <option value={RateType.ANNUAL}>anual</option>
+              <option value={RateType.MONTHLY}>mensal</option>
             </select>
           </div>
         </div>
 
         {/* Período */}
         <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1.5">Período</label>
-          <div className="flex gap-2">
+          <label className="block text-sm text-slate-500 font-semibold mb-2 uppercase tracking-tight text-[11px]">Período</label>
+          <div className="flex h-11">
             <input 
               type="number" 
               value={period}
               onChange={(e) => setPeriod(Number(e.target.value))}
-              className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="flex-1 px-4 border border-slate-300 rounded-l-md outline-none focus:border-primary transition-colors"
             />
             <select 
               value={periodType}
               onChange={(e) => setPeriodType(e.target.value as PeriodType)}
-              className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 p-2.5"
+              className="px-4 border border-l-0 border-slate-300 rounded-r-md text-sm outline-none cursor-pointer hover:bg-slate-50 transition-colors"
             >
-              <option value={PeriodType.YEARS}>Anos</option>
-              <option value={PeriodType.MONTHS}>Meses</option>
+              <option value={PeriodType.YEARS}>ano(s)</option>
+              <option value={PeriodType.MONTHS}>mes(es)</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between pt-4">
+        <button 
+          className="bg-primary text-white px-10 py-2.5 rounded-md font-bold hover:bg-blue-800 transition-colors shadow-sm"
+        >
+          Calcular
+        </button>
+        <div className="flex gap-6 text-sm">
+          <button className="text-primary font-semibold hover:underline decoration-2 underline-offset-4">Configurações Avançadas</button>
+          <button onClick={onClear} className="text-slate-400 hover:text-slate-600 font-medium transition-colors">Limpar campos</button>
         </div>
       </div>
     </div>

@@ -11,26 +11,23 @@ const SummaryCards: React.FC<SummaryCardsProps> = ({ summary }) => {
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Valor Total Final - Azul Principal */}
+      <div className="bg-primary text-white p-6 rounded-md shadow-md text-center transform hover:scale-[1.02] transition-transform">
+        <p className="text-[10px] font-bold uppercase tracking-widest mb-2 opacity-80">Valor total acumulado</p>
+        <p className="text-2xl font-black">{formatCurrency(summary.totalAmount)}</p>
+      </div>
+
       {/* Total Investido */}
-      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-blue-400">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total Investido</p>
-        <p className="text-2xl font-bold text-slate-800">{formatCurrency(summary.totalInvested)}</p>
-        <p className="text-xs text-slate-500 mt-2">Soma de todos os aportes</p>
+      <div className="bg-white p-6 rounded-md shadow-sm border border-slate-200 text-center">
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Total Investido (Capital)</p>
+        <p className="text-2xl font-black text-slate-800">{formatCurrency(summary.totalInvested)}</p>
       </div>
 
       {/* Total em Juros */}
-      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-emerald-400">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Total em Juros</p>
-        <p className="text-2xl font-bold text-emerald-600">{formatCurrency(summary.totalInterest)}</p>
-        <p className="text-xs text-emerald-500 mt-2">Rendimento de {summary.yieldPercentage.toFixed(1)}%</p>
-      </div>
-
-      {/* Valor Total */}
-      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-indigo-600">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Valor Total Final</p>
-        <p className="text-2xl font-bold text-indigo-700">{formatCurrency(summary.totalAmount)}</p>
-        <p className="text-xs text-indigo-500 mt-2">Montante acumulado</p>
+      <div className="bg-white p-6 rounded-md shadow-sm border border-slate-200 text-center">
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Rendimento em Juros</p>
+        <p className="text-2xl font-black text-emerald-600">{formatCurrency(summary.totalInterest)}</p>
       </div>
     </div>
   );

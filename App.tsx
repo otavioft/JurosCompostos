@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { RateType, PeriodType, CalculationResult, SummaryData } from './types';
 import InputSection from './components/InputSection';
 import SummaryCards from './components/SummaryCards';
@@ -9,15 +9,14 @@ import GeminiAnalysis from './components/GeminiAnalysis';
 
 const App: React.FC = () => {
   const [initialValue, setInitialValue] = useState<number>(1000);
-  const [monthlyValue, setMonthlyValue] = useState<number>(200);
-  const [interestRate, setInterestRate] = useState<number>(12);
+  const [monthlyValue, setMonthlyValue] = useState<number>(1000);
+  const [interestRate, setInterestRate] = useState<number>(9);
   const [rateType, setRateType] = useState<RateType>(RateType.ANNUAL);
-  const [period, setPeriod] = useState<number>(5);
+  const [period, setPeriod] = useState<number>(15);
   const [periodType, setPeriodType] = useState<PeriodType>(PeriodType.YEARS);
 
   const results: CalculationResult[] = useMemo(() => {
     const data: CalculationResult[] = [];
-    
     let totalMonths = periodType === PeriodType.YEARS ? period * 12 : period;
     let monthlyRate = rateType === RateType.ANNUAL 
       ? Math.pow(1 + interestRate / 100, 1/12) - 1 
@@ -27,7 +26,6 @@ const App: React.FC = () => {
     let totalInvested = initialValue;
     let totalInterest = 0;
 
-    // Month 0
     data.push({
       month: 0,
       totalInvested: initialValue,
@@ -52,7 +50,6 @@ const App: React.FC = () => {
         contribution: monthlyValue
       });
     }
-
     return data;
   }, [initialValue, monthlyValue, interestRate, rateType, period, periodType]);
 
@@ -66,66 +63,79 @@ const App: React.FC = () => {
     };
   }, [results]);
 
+  const handleClear = () => {
+    setInitialValue(0);
+    setMonthlyValue(0);
+    setInterestRate(0);
+    setPeriod(0);
+  };
+
   return (
-    <div className="min-h-screen pb-12">
-      {/* Header */}
-      <header className="bg-indigo-700 text-white py-8 shadow-lg mb-8">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-lg shadow-inner">
-              <i className="fa-solid fa-chart-line text-indigo-700 text-2xl"></i>
+    <div className="min-h-screen bg-gray-50 pb-20">
+      {/* Header Tema Azul */}
+      <header className="bg-primary text-white shadow-md">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+               <i className="fa-solid fa-chart-line text-2xl"></i>
+               <span>Simulador Financeiro</span>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold">Simulador Pro</h1>
-              <p className="text-indigo-100 text-sm">Calculadora de Juros Compostos</p>
+            
+            <div className="hidden md:flex relative items-center">
+              <input 
+                type="text" 
+                placeholder="Pesquisar calculadoras e indicadores..." 
+                className="bg-white/10 text-white placeholder:text-white/60 text-xs py-2 px-10 rounded-md w-64 outline-none border border-white/20 focus:bg-white focus:text-gray-800 transition-all"
+              />
+              <i className="fa-solid fa-magnifying-glass absolute left-3 text-white/50 text-sm"></i>
             </div>
           </div>
-          <div className="hidden md:block">
-            <span className="bg-indigo-600 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider">
-              Investimento Inteligente
-            </span>
-          </div>
+
+          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+            <a href="#" className="hover:text-blue-200 transition-colors">Notícias</a>
+            <a href="#" className="hover:text-blue-200 transition-colors">Investimentos</a>
+            <a href="#" className="hover:text-blue-200 transition-colors">Calculadoras</a>
+            <button className="bg-white text-primary px-4 py-1.5 rounded-md hover:bg-blue-50 transition-colors font-bold shadow-sm">
+              Falar com consultor
+            </button>
+            <a href="#" className="hover:text-blue-200 transition-colors border-l border-white/20 pl-6">Entrar</a>
+          </nav>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <main className="container mx-auto px-4 mt-12 max-w-5xl">
+        {/* Input Card */}
+        <div className="bg-white rounded-md shadow-sm border border-gray-200 p-8 mb-10">
+          <h2 className="text-xl font-bold text-primary mb-8">Simulador de Juros Compostos</h2>
           
-          {/* Inputs Section */}
-          <div className="lg:col-span-4 space-y-6">
-            <InputSection 
-              initialValue={initialValue} setInitialValue={setInitialValue}
-              monthlyValue={monthlyValue} setMonthlyValue={setMonthlyValue}
-              interestRate={interestRate} setInterestRate={setInterestRate}
-              rateType={rateType} setRateType={setRateType}
-              period={period} setPeriod={setPeriod}
-              periodType={periodType} setPeriodType={setPeriodType}
-            />
-            
-            <GeminiAnalysis summary={summary} period={period} periodType={periodType} />
+          <InputSection 
+            initialValue={initialValue} setInitialValue={setInitialValue}
+            monthlyValue={monthlyValue} setMonthlyValue={setMonthlyValue}
+            interestRate={interestRate} setInterestRate={setInterestRate}
+            rateType={rateType} setRateType={setRateType}
+            period={period} setPeriod={setPeriod}
+            periodType={periodType} setPeriodType={setPeriodType}
+            onClear={handleClear}
+          />
+        </div>
+
+        {/* Results Title */}
+        <h2 className="text-xl font-bold text-primary mb-6 px-2">Resultado da Simulação</h2>
+
+        <div className="space-y-10">
+          <SummaryCards summary={summary} />
+          
+          <div className="bg-white p-8 rounded-md shadow-sm border border-gray-200">
+            <h3 className="text-center font-bold text-primary mb-8 uppercase text-xs tracking-widest">Gráfico de Evolução</h3>
+            <ChartSection results={results} />
           </div>
 
-          {/* Results Section */}
-          <div className="lg:col-span-8 space-y-8">
-            <SummaryCards summary={summary} />
-            
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                <i className="fa-solid fa-chart-area text-indigo-500"></i>
-                Evolução Patrimonial
-              </h3>
-              <ChartSection results={results} />
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
-                <i className="fa-solid fa-table text-indigo-500"></i>
-                Detalhamento Mensal
-              </h3>
-              <TableSection results={results} />
-            </div>
+          <div className="bg-white p-8 rounded-md shadow-sm border border-gray-200">
+            <h3 className="text-center font-bold text-primary mb-8 uppercase text-xs tracking-widest">Detalhamento Mensal</h3>
+            <TableSection results={results} />
           </div>
 
+          <GeminiAnalysis summary={summary} period={period} periodType={periodType} />
         </div>
       </main>
     </div>
